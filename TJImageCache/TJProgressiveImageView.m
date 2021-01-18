@@ -94,7 +94,7 @@ __attribute__((objc_direct_members))
             }
         } else if (cancelLowPriImages) {
             // Cancel any lower priority images
-            [TJImageCache cancelImageLoadForURL:obj delegate:self policy:TJImageCacheCancellationPolicyImageProcessing];
+            [TJImageCache cancelImageLoadForURL:obj delegate:self policy:TJImageCacheCancellationPolicyBeforeBody];
         } else {
             *stop = YES;
         }
