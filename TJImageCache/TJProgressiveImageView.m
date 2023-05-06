@@ -15,15 +15,32 @@ __attribute__((objc_direct_members))
 
 @end
 
-__attribute__((objc_direct_members))
 @implementation TJProgressiveImageView
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
         _currentImageURLStringIndex = NSNotFound;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
     }
     return self;
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)notification
+{
+    if (!self.image) {
+        NSOrderedSet<NSString *> *imageURLStrings = self.imageURLStrings;
+        self.imageURLStrings = nil;
+        self.imageURLStrings = imageURLStrings;
+    }
+}
+
+- (void)applicationDidEnterBackground:(NSNotification *)notification
+{
+    if (!self.window) {
+        self.image = nil;
+    }
 }
 
 - (void)setImageURLStrings:(NSOrderedSet<NSString *> *)imageURLStrings
